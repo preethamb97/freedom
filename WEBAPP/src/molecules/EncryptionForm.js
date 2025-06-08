@@ -349,11 +349,11 @@ const EncryptionForm = ({ onSubmit, loading }) => {
         message="Security Tips"
         description={
           <ul className="mt-2 text-sm">
-            <li>• Store your 64-character key in a secure password manager</li>
-            <li>• Never share your encryption key with anyone</li>
-            <li>• Use a unique key for each encryption</li>
-            <li>• Mix letters and numbers for stronger security</li>
-            <li>• Consider writing down the key and storing it safely offline</li>
+            <li>Store your 64-character key in a secure password manager</li>
+            <li>Never share your encryption key with anyone</li>
+            <li>Use a unique key for each encryption</li>
+            <li>Mix letters and numbers for stronger security</li>
+            <li>Consider writing down the key and storing it safely offline</li>
           </ul>
         }
         type="info"
