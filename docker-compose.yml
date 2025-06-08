@@ -1,0 +1,64 @@
+services:
+  # API Service (Bun.js)
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: encrypted-data-api
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    env_file:
+      - ./API/.env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "5000:3001"
+    networks:
+      - encrypted-data-network
+    volumes:
+      - ./API:/app
+      - /app/node_modules
+      - api-backup:/app/backup
+
+  # Frontend Service (React)
+  webapp:
+    build:
+      context: ./WEBAPP
+      dockerfile: Dockerfile
+      target: production
+    container_name: encrypted-data-webapp
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    env_file:
+      - ./WEBAPP/.env
+    ports:
+      - "5001:80"
+    depends_on:
+      - api
+    networks:
+      - encrypted-data-network
+    volumes:
+      - webapp-backup:/app/backup
+
+  # MongoDB Atlas is used as external database service
+  # Configure MONGODB_URI in API/.env file
+
+networks:
+  encrypted-data-network:
+    driver: bridge
+
+volumes:
+  api-backup:
+    driver: local
+  webapp-backup:
+    driver: local

@@ -1,0 +1,33 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Encrypted Data API with Bun.js and MongoDB",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "bun run src/server.js",
+    "dev": "bun --watch run src/server.js",
+    "test": "bun test tests/integration.test.js",
+    "test:setup": "bun run tests/setup.js",
+    "test:integration": "bun run tests/run-tests.js",
+    "test:full": "npm run test:setup && npm run test:integration",
+    "test:watch": "bun test --watch tests/integration.test.js",
+    "test:clean": "bun run tests/cleanup.js",
+    "db:migrate": "bun run src/database/migrate.js",
+    "db:seed": "bun run src/database/seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express-rate-limit": "^7.1.5",
+    "firebase-admin": "^11.11.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.1"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

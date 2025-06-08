@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="lockGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="shieldGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:0.4" />
+    </radialGradient>
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- iOS Background with rounded corners -->
+  <rect x="0" y="0" width="180" height="180" rx="32" ry="32" fill="url(#backgroundGradient)"/>
+  
+  <!-- Main Shield Background -->
+  <circle cx="90" cy="90" r="75" fill="url(#shieldGradient)" stroke="#0D47A1" stroke-width="3"/>
+  
+  <!-- Lock Shackle (Top Part) - Scaled for 180x180 -->
+  <path d="M55 65 Q55 45 90 45 Q125 45 125 65 L125 75 L115 75 L115 65 Q115 55 90 55 Q65 55 65 65 L65 75 L55 75 Z" 
+        fill="url(#lockGradient)" stroke="#1B5E20" stroke-width="2"/>
+  
+  <!-- Lock Body - Scaled for 180x180 -->
+  <rect x="50" y="75" width="80" height="55" rx="8" ry="8" 
+        fill="url(#bodyGradient)" stroke="#0D47A1" stroke-width="2"/>
+  
+  <!-- Keyhole - Scaled for 180x180 -->
+  <circle cx="90" cy="95" r="8" fill="#FFF" opacity="0.95"/>
+  <rect x="86" y="99" width="8" height="16" rx="4" fill="#FFF" opacity="0.95"/>
+  
+  <!-- Security Dots/Indicators - Scaled for 180x180 -->
+  <circle cx="63" cy="85" r="3" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="117" cy="85" r="3" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="63" cy="120" r="3" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="117" cy="120" r="3" fill="#4CAF50" opacity="0.9"/>
+  
+  <!-- Additional security elements for iOS -->
+  <circle cx="90" cy="135" r="2" fill="#4CAF50" opacity="0.7"/>
+  
+  <!-- Shine Effect - Scaled for 180x180 -->
+  <ellipse cx="75" cy="80" rx="16" ry="12" fill="#FFF" opacity="0.25"/>
+  
+  <!-- Border highlight for iOS -->
+  <circle cx="90" cy="90" r="75" fill="none" stroke="#FFF" stroke-width="1" opacity="0.3"/>
+</svg> 

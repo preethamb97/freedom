@@ -1,0 +1,86 @@
+{
+  "name": "freedom-encrypted-storage",
+  "version": "1.0.0",
+  "description": "Freedom - Secure AES-256 encrypted data storage application with military-grade security",
+  "keywords": ["encryption", "AES-256", "security", "privacy", "data-storage", "zero-knowledge", "encrypted-storage"],
+  "author": "Freedom Development Team",
+  "license": "MIT",
+  "homepage": "https://encryptedui.trackitall.in",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freedom-dev/encrypted-data-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/freedom-dev/encrypted-data-ui/issues"
+  },
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.12.8",
+    "axios": "^1.6.3",
+    "firebase": "^10.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "CI=true react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "msw": "^2.0.11"
+  },
+  "proxy": "http://localhost:3001",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/index.js",
+      "!src/serviceWorker.js",
+      "!src/reportWebVitals.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(axios)/)"
+    ],
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/axios.js"
+    }
+  }
+} 

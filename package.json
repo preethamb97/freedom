@@ -1,0 +1,82 @@
+{
+  "name": "encrypted-data-ui",
+  "version": "1.0.0",
+  "description": "Secure web application with encrypted data storage",
+  "scripts": {
+    "build": "npm run build --workspace=WEBAPP",
+    "postbuild": "chmod +x scripts/simple-build-deploy.sh && ./scripts/simple-build-deploy.sh",
+    "build:deploy": "npm run build",
+    "deploy:simple": "chmod +x scripts/simple-build-deploy.sh && ./scripts/simple-build-deploy.sh",
+    "deploy:server": "chmod +x scripts/simple-server-deploy.sh && ./scripts/simple-server-deploy.sh",
+    "dev:ui": "npm run dev --workspace=WEBAPP",
+    "dev:api": "npm run dev --workspace=API",
+    "start:ui": "npm run start --workspace=WEBAPP",
+    "start:api": "npm run start --workspace=API",
+    "install:all": "npm install && npm install --workspace=API && npm install --workspace=WEBAPP",
+    "clean": "npm run clean --workspace=WEBAPP && npm run clean --workspace=API",
+    "test": "npm run test --workspace=WEBAPP",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose down && docker-compose up -d",
+    "docker:clean": "docker-compose down -v --remove-orphans && docker system prune -f",
+    "deploy:up": "./deploy.sh up",
+    "deploy:up:dev": "./deploy.sh up dev",
+    "deploy:down": "./deploy.sh down",
+    "deploy:restart": "./deploy.sh restart",
+    "deploy:restart:dev": "./deploy.sh restart dev",
+    "deploy:clean": "./deploy.sh clean",
+    "deploy:clean-all": "./deploy.sh clean-all",
+    "deploy:status": "./deploy.sh status",
+    "deploy:logs": "./deploy.sh logs",
+    "deploy:health": "./deploy.sh health",
+    "deploy:build": "./deploy.sh build",
+    "local:up": "./local-deploy.sh up",
+    "local:down": "./local-deploy.sh down",
+    "local:restart": "./local-deploy.sh restart",
+    "local:clean": "./local-deploy.sh clean",
+    "local:clean-all": "./local-deploy.sh clean-all",
+    "local:status": "./local-deploy.sh status",
+    "local:logs": "./local-deploy.sh logs",
+    "local:build": "./local-deploy.sh build",
+    "local:health": "./local-deploy.sh health",
+    "cleanup:docker": "./clean-docker.sh",
+    "cleanup:docker:all": "./clean-docker.sh --all",
+    "cleanup:docker:system": "./clean-docker.sh --system",
+    "cleanup:docker:project": "./clean-docker.sh --project",
+    "cleanup:docker:dry-run": "./clean-docker.sh --dry-run",
+    "cleanup:docker:force": "./clean-docker.sh --all --force",
+    "setup": "node -e \"console.log('Please run ./setup.sh on Unix or setup.bat on Windows')\"",
+    "health": "curl -f http://localhost:3001/api/health || echo 'API not running'"
+  },
+  "workspaces": [
+    "WEBAPP",
+    "API"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "encryption",
+    "aes-256",
+    "react",
+    "bun",
+    "mongodb",
+    "mongoose",
+    "firebase",
+    "security",
+    "web-app"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/encrypted-data-ui.git"
+  },
+  "author": "Your Name <your.email@example.com>"
+} 

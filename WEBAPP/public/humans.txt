@@ -1,0 +1,33 @@
+# humanstxt.org
+
+/* TEAM */
+Product Owner: Freedom Development Team
+Location: Global
+
+/* THANKS */
+Security Researchers: For helping keep user data safe
+Open Source Community: For providing excellent tools and libraries
+
+/* SITE */
+Last update: 2024/12/25
+Language: English
+Doctype: HTML5
+IDE: Visual Studio Code, Cursor
+Technologies: React, Node.js, MongoDB, AES-256 Encryption
+Standards: W3C, OWASP Security Guidelines
+
+/* SECURITY */
+Encryption: AES-256-GCM
+Key Length: 64 characters
+Architecture: Zero-knowledge
+Authentication: Google OAuth2
+
+/* DESCRIPTION */
+Freedom is a secure encrypted data storage application that provides 
+military-grade AES-256 encryption for protecting sensitive information.
+Users can store and manage their private data with complete privacy
+using 64-character encryption keys and zero-knowledge architecture.
+
+The application prioritizes security, privacy, and user control over
+their data. All encryption happens client-side, ensuring that even
+the service providers cannot access user data. 

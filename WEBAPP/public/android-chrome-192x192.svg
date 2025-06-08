@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="lockGradient192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bodyGradient192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="shieldGradient192" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:0.4" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="96" cy="96" r="90" fill="url(#shieldGradient192)" stroke="#0D47A1" stroke-width="4"/>
+  
+  <!-- Lock Shackle (Top Part) - Scaled for 192x192 -->
+  <path d="M60 70 Q60 50 96 50 Q132 50 132 70 L132 80 L125 80 L125 70 Q125 60 96 60 Q67 60 67 70 L67 80 L60 80 Z" 
+        fill="url(#lockGradient192)" stroke="#1B5E20" stroke-width="2"/>
+  
+  <!-- Lock Body - Scaled for 192x192 -->
+  <rect x="52" y="80" width="88" height="62" rx="10" ry="10" 
+        fill="url(#bodyGradient192)" stroke="#0D47A1" stroke-width="2"/>
+  
+  <!-- Keyhole - Scaled for 192x192 -->
+  <circle cx="96" cy="102" r="9" fill="#FFF" opacity="0.95"/>
+  <rect x="92" y="107" width="8" height="18" rx="4" fill="#FFF" opacity="0.95"/>
+  
+  <!-- Security Dots/Indicators - Scaled for 192x192 -->
+  <circle cx="68" cy="92" r="3.5" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="124" cy="92" r="3.5" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="68" cy="130" r="3.5" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="124" cy="130" r="3.5" fill="#4CAF50" opacity="0.9"/>
+  
+  <!-- Additional security element -->
+  <circle cx="96" cy="140" r="2.5" fill="#4CAF50" opacity="0.8"/>
+  
+  <!-- Shine Effect - Scaled for 192x192 -->
+  <ellipse cx="80" cy="85" rx="18" ry="14" fill="#FFF" opacity="0.25"/>
+  
+  <!-- Border highlight -->
+  <circle cx="96" cy="96" r="90" fill="none" stroke="#FFF" stroke-width="2" opacity="0.3"/>
+</svg> 

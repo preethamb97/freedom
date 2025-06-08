@@ -1,0 +1,11 @@
+Contact: security@trackitall.in
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://encryptedui.trackitall.in/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://encryptedui.trackitall.in/.well-known/security.txt
+Policy: https://encryptedui.trackitall.in/security-policy
+Hiring: https://encryptedui.trackitall.in/careers
+
+# Freedom - Secure Encrypted Data Storage
+# We take security seriously. Please report vulnerabilities responsibly.
+# This application uses AES-256-GCM encryption for maximum data protection. 

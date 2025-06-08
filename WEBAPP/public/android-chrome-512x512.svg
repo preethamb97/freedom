@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="lockGradient512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E7D32;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bodyGradient512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="shieldGradient512" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#1976D2;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:0.4" />
+    </radialGradient>
+    <linearGradient id="backgroundGradient512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow512">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle with Shadow -->
+  <circle cx="256" cy="256" r="240" fill="url(#shieldGradient512)" stroke="#0D47A1" stroke-width="8" filter="url(#shadow512)"/>
+  
+  <!-- Lock Shackle (Top Part) - Scaled for 512x512 -->
+  <path d="M170 180 Q170 120 256 120 Q342 120 342 180 L342 210 L320 210 L320 180 Q320 150 256 150 Q192 150 192 180 L192 210 L170 210 Z" 
+        fill="url(#lockGradient512)" stroke="#1B5E20" stroke-width="6"/>
+  
+  <!-- Lock Body - Scaled for 512x512 -->
+  <rect x="140" y="210" width="232" height="160" rx="24" ry="24" 
+        fill="url(#bodyGradient512)" stroke="#0D47A1" stroke-width="6" filter="url(#shadow512)"/>
+  
+  <!-- Keyhole - Scaled for 512x512 -->
+  <circle cx="256" cy="270" r="24" fill="#FFF" opacity="0.95"/>
+  <rect x="244" y="282" width="24" height="48" rx="12" fill="#FFF" opacity="0.95"/>
+  
+  <!-- Security Dots/Indicators - Scaled for 512x512 -->
+  <circle cx="170" cy="240" r="8" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="342" cy="240" r="8" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="170" cy="340" r="8" fill="#4CAF50" opacity="0.9"/>
+  <circle cx="342" cy="340" r="8" fill="#4CAF50" opacity="0.9"/>
+  
+  <!-- Additional security elements -->
+  <circle cx="256" cy="350" r="6" fill="#4CAF50" opacity="0.8"/>
+  <circle cx="200" cy="290" r="5" fill="#4CAF50" opacity="0.6"/>
+  <circle cx="312" cy="290" r="5" fill="#4CAF50" opacity="0.6"/>
+  
+  <!-- Shine Effect - Scaled for 512x512 -->
+  <ellipse cx="200" cy="220" rx="48" ry="36" fill="#FFF" opacity="0.25"/>
+  
+  <!-- Border highlight -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="#FFF" stroke-width="3" opacity="0.3"/>
+  
+  <!-- Inner details for high resolution -->
+  <rect x="220" y="250" width="72" height="4" rx="2" fill="#FFF" opacity="0.4"/>
+  <rect x="220" y="310" width="72" height="4" rx="2" fill="#FFF" opacity="0.4"/>
+</svg> 
