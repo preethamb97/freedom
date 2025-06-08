@@ -25,6 +25,19 @@ const ViewPage = () => {
   const [currentEncryption, setCurrentEncryption] = useState('');
   const [currentEncryptionKey, setCurrentEncryptionKey] = useState('');
   const [currentOffset, setCurrentOffset] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     fetchEncryptions();
@@ -106,21 +119,39 @@ const ViewPage = () => {
     navigate('/home');
   };
 
+  const handleMenuClick = () => {
+    setSidebarOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <Layout className="min-h-screen">
-      <Header title="View Encrypted Data" />
+      <Header 
+        title="View Encrypted Data" 
+        showMobileMenu={isMobile} 
+        onMenuClick={handleMenuClick}
+      />
       
       <Layout>
-        <Sidebar user={user} onSignOut={signOut} />
+        <Sidebar 
+          user={user} 
+          onSignOut={signOut}
+          isMobile={isMobile}
+          isOpen={sidebarOpen}
+          onClose={handleSidebarClose}
+        />
         
-        <Layout>
-          <div className="p-6 bg-white border-b border-gray-200">
-            <div className="flex justify-between items-center max-w-4xl mx-auto">
+        <Layout className={`${isMobile ? '' : 'lg:ml-0'}`}>
+          <div className="p-4 sm:p-6 bg-white border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center max-w-4xl mx-auto space-y-3 sm:space-y-0">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
                   Decrypt and View Data
                 </h2>
-                <p className="text-gray-600 mt-1">
+                <p className="text-gray-600 mt-1 text-sm sm:text-base">
                   Select an encryption and enter your 64-digit encryption key to view decrypted data
                 </p>
               </div>
@@ -130,13 +161,15 @@ const ViewPage = () => {
                 icon={<ArrowLeftOutlined />}
                 onClick={handleGoHome}
                 size="large"
+                className="w-full sm:w-auto"
               >
-                Back to Home
+                <span className="hidden xs:inline">Back to Home</span>
+                <span className="xs:hidden">Back</span>
               </Button>
             </div>
           </div>
           
-          <div className="p-6 bg-gray-50 min-h-screen">
+          <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
             <div className="max-w-4xl mx-auto">
               <DataViewer
                 encryptions={encryptions}

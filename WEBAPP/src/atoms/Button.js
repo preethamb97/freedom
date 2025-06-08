@@ -25,12 +25,23 @@ const Button = ({
   };
 
   const getButtonClass = () => {
-    let baseClass = '';
-    if (variant === 'danger') {
-      baseClass = 'bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600';
-    } else if (variant === 'ghost') {
-      baseClass = 'border-gray-300 text-gray-600 hover:text-primary hover:border-primary';
+    let baseClass = 'transition-all duration-200 ';
+    
+    // Touch-friendly sizing
+    if (size === 'large') {
+      baseClass += 'min-h-[48px] px-6 py-3 text-base ';
+    } else if (size === 'middle') {
+      baseClass += 'min-h-[44px] px-4 py-2 text-sm sm:text-base ';
+    } else {
+      baseClass += 'min-h-[40px] px-3 py-1 text-sm ';
     }
+    
+    if (variant === 'danger') {
+      baseClass += 'bg-red-500 border-red-500 hover:bg-red-600 hover:border-red-600 ';
+    } else if (variant === 'ghost') {
+      baseClass += 'border-gray-300 text-gray-600 hover:text-primary hover:border-primary ';
+    }
+    
     return `${baseClass} ${className}`;
   };
 

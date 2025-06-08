@@ -22,4 +22,153 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Responsive utilities */
+@layer utilities {
+  .mobile-padding {
+    @apply px-4 py-2;
+  }
+  
+  .tablet-padding {
+    @apply px-6 py-4;
+  }
+  
+  .desktop-padding {
+    @apply px-8 py-6;
+  }
+  
+  .responsive-padding {
+    @apply mobile-padding sm:tablet-padding lg:desktop-padding;
+  }
+  
+  .mobile-text {
+    @apply text-sm;
+  }
+  
+  .tablet-text {
+    @apply text-base;
+  }
+  
+  .desktop-text {
+    @apply text-lg;
+  }
+  
+  .responsive-text {
+    @apply mobile-text sm:tablet-text lg:desktop-text;
+  }
+  
+  .mobile-header {
+    @apply text-xl;
+  }
+  
+  .tablet-header {
+    @apply text-2xl;
+  }
+  
+  .desktop-header {
+    @apply text-3xl;
+  }
+  
+  .responsive-header {
+    @apply mobile-header sm:tablet-header lg:desktop-header;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .ant-layout-sider {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    position: fixed !important;
+    z-index: 1000;
+    height: 100vh !important;
+  }
+  
+  .ant-layout-sider.mobile-sidebar-open {
+    transform: translateX(0);
+  }
+  
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .ant-card {
+    margin: 0.5rem;
+    border-radius: 8px;
+  }
+  
+  .ant-layout-content {
+    padding: 0.5rem !important;
+  }
+  
+  /* Reduce font sizes on mobile */
+  .ant-typography h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .ant-typography h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .ant-typography h3 {
+    font-size: 1.125rem !important;
+  }
+  
+  /* Make buttons more touch-friendly */
+  .ant-btn {
+    min-height: 44px;
+    padding: 8px 16px;
+    border-radius: 8px;
+  }
+  
+  .ant-btn-lg {
+    min-height: 48px;
+    padding: 12px 20px;
+  }
+  
+  /* Make form inputs more touch-friendly */
+  .ant-input,
+  .ant-select-selector {
+    min-height: 44px;
+    border-radius: 8px;
+  }
+  
+  .ant-input-lg,
+  .ant-select-lg .ant-select-selector {
+    min-height: 48px;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .ant-layout-sider {
+    width: 250px !important;
+    min-width: 250px !important;
+    max-width: 250px !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .ant-btn:hover {
+    transform: none;
+  }
+  
+  .ant-card:hover {
+    transform: none;
+  }
+  
+  /* Larger touch targets */
+  .ant-btn,
+  .ant-input,
+  .ant-select-selector {
+    min-height: 44px;
+  }
 } 

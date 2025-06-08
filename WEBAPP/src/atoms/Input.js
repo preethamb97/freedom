@@ -10,9 +10,23 @@ const Input = ({
   onChange,
   className = '',
   rows = 4,
+  size = 'middle',
   ...props 
 }) => {
-  const baseClass = 'w-full';
+  const getInputClass = () => {
+    let baseClass = 'w-full transition-all duration-200 ';
+    
+    // Touch-friendly sizing
+    if (size === 'large') {
+      baseClass += 'min-h-[48px] text-base ';
+    } else if (size === 'middle') {
+      baseClass += 'min-h-[44px] text-sm sm:text-base ';
+    } else {
+      baseClass += 'min-h-[40px] text-sm ';
+    }
+    
+    return `${baseClass} ${className}`;
+  };
 
   if (type === 'textarea') {
     return (
@@ -21,7 +35,8 @@ const Input = ({
         value={value}
         onChange={onChange}
         rows={rows}
-        className={`${baseClass} ${className}`}
+        size={size}
+        className={getInputClass()}
         {...props}
       />
     );
@@ -33,7 +48,8 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`${baseClass} ${className}`}
+        size={size}
+        className={getInputClass()}
         {...props}
       />
     );
@@ -45,7 +61,8 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`${baseClass} ${className}`}
+      size={size}
+      className={getInputClass()}
       {...props}
     />
   );

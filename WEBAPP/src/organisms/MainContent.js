@@ -82,7 +82,7 @@ const MainContent = () => {
   };
 
   return (
-    <Content className="p-6 bg-gray-50 min-h-screen">
+    <Content className="p-4 sm:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <Space direction="vertical" size="large" className="w-full">
           <EncryptionForm
