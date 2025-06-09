@@ -13,7 +13,7 @@ Last update: 2024/12/25
 Language: English
 Doctype: HTML5
 IDE: Visual Studio Code, Cursor
-Technologies: React, Node.js, MongoDB, AES-256 Encryption
+Technologies: React, Bun.js, MongoDB, AES-256 Encryption
 Standards: W3C, OWASP Security Guidelines
 
 /* SECURITY */

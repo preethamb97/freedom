@@ -25,7 +25,7 @@
 
 ### 🏴‍☠️ **Crew Technologies**
 - **Frontend**: React.js with Ant Design UI (Smooth as Luffy's Gear 5!)
-- **Backend**: Node.js with Express (Strong as Luffy's punch!)
+- **Backend**: Bun.js with native HTTP server (Fast as Luffy's Gear 2!)
 - **Database**: MongoDB Atlas (Vast as the Grand Line!)
 - **Authentication**: Google OAuth 2.0 (Secure as Marine Headquarters!)
 - **Deployment**: Docker containerization (Portable as the Thousand Sunny!)
@@ -67,8 +67,8 @@ cp API/env.example API/.env
 # Edit API/.env with your MongoDB Atlas URI and Google OAuth credentials
 
 # Start the development servers
-npm run dev:api     # Backend on port 3001
-npm run dev:webapp  # Frontend on port 3000
+npm run dev:api     # Backend on port 3001 (Bun.js)
+npm run dev:webapp  # Frontend on port 3000 (React)
 ```
 
 ## 🌊 **Environment Configuration**
@@ -129,7 +129,7 @@ Access your secrets with the power of your encryption key!
 
 ```
 encrypted-data-ui/
-├── 🚢 API/                    # Backend crew (Node.js)
+├── 🚢 API/                    # Backend crew (Bun.js)
 │   ├── src/
 │   │   ├── controllers/       # Route handlers (like Nami's navigation)
 │   │   ├── models/           # Data models (treasure maps)
@@ -194,6 +194,8 @@ docker-compose up -d
 # View logs (checking the ship's log)
 docker-compose logs -f
 ```
+
+> **Note**: The API service runs on Bun.js runtime for optimal performance, while the workspace management uses npm for compatibility.
 
 ## 🏴‍☠️ **Contributing to the Crew**
 

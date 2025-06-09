@@ -9,7 +9,7 @@
     "test": "bun test tests/integration.test.js",
     "test:setup": "bun run tests/setup.js",
     "test:integration": "bun run tests/run-tests.js",
-    "test:full": "npm run test:setup && npm run test:integration",
+    "test:full": "bun run test:setup && bun run test:integration",
     "test:watch": "bun test --watch tests/integration.test.js",
     "test:clean": "bun run tests/cleanup.js",
     "db:migrate": "bun run src/database/migrate.js",

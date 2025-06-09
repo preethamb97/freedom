@@ -36,7 +36,7 @@ This directory contains comprehensive integration tests for all API routes in th
 
 ### Prerequisites
 
-1. **Bun.js** - JavaScript runtime and package manager
+1. **Bun.js** - High-performance JavaScript runtime
    ```bash
    curl -fsSL https://bun.sh/install | bash
    ```
@@ -53,14 +53,12 @@ This directory contains comprehensive integration tests for all API routes in th
    # Configure MONGODB_URI in test environment
    ```
 
-3. **Node.js** - Alternative runtime (if Bun not available)
-
 ### Running Tests
 
 #### Option 1: Full Test Suite (Recommended)
 ```bash
 cd API
-npm run test:full
+bun run test:full
 ```
 
 This runs the complete integration test process:
@@ -73,19 +71,19 @@ This runs the complete integration test process:
 
 ```bash
 # Setup test environment only
-npm run test:setup
+bun run test:setup
 
 # Run integration tests (requires running server)
-npm run test:integration  
+bun run test:integration  
 
 # Run tests with Bun directly
-npm run test
+bun run test
 
 # Watch mode for development
-npm run test:watch
+bun run test:watch
 
 # Cleanup test environment
-npm run test:clean
+bun run test:clean
 ```
 
 #### Option 3: Manual Server + Tests
@@ -183,7 +181,7 @@ Each endpoint is tested with:
 ### Verbose Logging
 ```bash
 # Enable detailed logging
-LOG_LEVEL=debug npm run test:integration
+LOG_LEVEL=debug bun run test:integration
 ```
 
 ### Individual Test Runs
@@ -283,7 +281,7 @@ For CI/CD pipelines:
 - name: Run Integration Tests
   run: |
     cd API
-    npm run test:full
+    bun run test:full
   env:
     MONGODB_URI: ${{ secrets.MONGODB_TEST_URI }}
     JWT_SECRET: ${{ secrets.JWT_TEST_SECRET }}
