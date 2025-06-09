@@ -61,7 +61,8 @@ export const testDbConfig = {
   options: {
     maxPoolSize: 5,
     serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000
+    socketTimeoutMS: 45000,
+    bufferCommands: false // Disable mongoose buffering for tests
   }
 };
 

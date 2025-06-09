@@ -4,40 +4,69 @@
  * This mock service simulates encryption management without database dependencies.
  */
 
+import mongoose from 'mongoose';
+
 // Mock encryption database
 const mockEncryptions = new Map();
-let encryptionIdCounter = 1;
+
+/**
+ * Generate a test ObjectId
+ */
+function generateTestObjectId() {
+  return new mongoose.Types.ObjectId();
+}
 
 /**
  * Create new encryption - matches real service interface
  */
 export async function createEncryption(userId, name, encryptionKey) {
+  // Input validation
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+  
+  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    throw new Error('Encryption name is required');
+  }
+  
+  if (name.length > 100) {
+    throw new Error('Encryption name must be 100 characters or less');
+  }
+  
   // Validate encryption key
-  if (!encryptionKey || encryptionKey.length !== 64) {
+  if (!encryptionKey || typeof encryptionKey !== 'string') {
     throw new Error('Encryption key must be exactly 64 characters long');
+  }
+  
+  if (encryptionKey.length !== 64) {
+    throw new Error('Encryption key must be exactly 64 characters long');
+  }
+  
+  // Check if encryption key contains only valid characters (alphanumeric)
+  if (!/^[a-zA-Z0-9]+$/.test(encryptionKey)) {
+    throw new Error('Encryption key must contain only alphanumeric characters');
   }
   
   // Check if encryption with same name exists for user
   const existingEncryption = Array.from(mockEncryptions.values())
-    .find(enc => enc.user_id === userId && enc.name === name);
+    .find(enc => enc.user_id === userId && enc.name.trim() === name.trim());
     
   if (existingEncryption) {
     throw new Error('Encryption with this name already exists');
   }
   
-  const encryptionId = `67${encryptionIdCounter.toString().padStart(22, '0')}`; // Mock ObjectId format
-  encryptionIdCounter++;
+  const encryptionId = generateTestObjectId();
   
   const encryption = {
     encryption_id: encryptionId,
     user_id: userId,
-    name: name,
+    name: name.trim(),
     encryption_key: encryptionKey, // Store the actual key for testing
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };
   
-  mockEncryptions.set(encryptionId, encryption);
+  mockEncryptions.set(encryptionId.toString(), encryption);
   
   return {
     encryption_id: encryption.encryption_id,
@@ -65,7 +94,16 @@ export async function getUserEncryptions(userId) {
  * Verify encryption key - matches real service interface
  */
 export async function verifyEncryptionKey(encryptionId, userId, encryptionKey) {
-  const encryption = mockEncryptions.get(encryptionId); // Don't parse as int, use as string
+  // Input validation
+  if (!encryptionId) {
+    throw new Error('Encryption ID is required');
+  }
+  
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+  
+  const encryption = mockEncryptions.get(encryptionId.toString());
   
   if (!encryption) {
     throw new Error('Encryption not found');
@@ -84,11 +122,16 @@ export async function verifyEncryptionKey(encryptionId, userId, encryptionKey) {
     throw new Error('Encryption key must be exactly 64 characters long');
   }
   
+  // Check if encryption key contains only valid characters (alphanumeric)
+  if (!/^[a-zA-Z0-9]+$/.test(encryptionKey)) {
+    throw new Error('Encryption key must contain only alphanumeric characters');
+  }
+  
   // Mock verification - compare actual keys for testing
   const isValid = encryption.encryption_key === encryptionKey;
   
   return {
-    isValid: isValid, // Changed from 'valid' to 'isValid' to match real service
+    isValid: isValid,
     message: isValid ? 'Encryption key verified' : 'Invalid encryption key'
   };
 }
@@ -98,7 +141,6 @@ export async function verifyEncryptionKey(encryptionId, userId, encryptionKey) {
  */
 export function clearMockEncryptions() {
   mockEncryptions.clear();
-  encryptionIdCounter = 1;
 }
 
 /**

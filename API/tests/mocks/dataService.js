@@ -4,15 +4,27 @@
  * This mock service simulates encrypted data storage and retrieval without database dependencies.
  */
 
+import mongoose from 'mongoose';
+
 // Mock data database
 const mockData = new Map();
-let dataIdCounter = 1;
+
+/**
+ * Generate a test ObjectId
+ */
+function generateTestObjectId() {
+  return new mongoose.Types.ObjectId();
+}
 
 /**
  * Store encrypted data - matches real service interface
  */
 export async function storeEncryptedData(userId, encryptionId, text, encryptionKey, req) {
   // Validate inputs
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+  
   if (!encryptionId || typeof encryptionId !== 'string') {
     throw new Error('Valid encryption ID is required');
   }
@@ -21,8 +33,17 @@ export async function storeEncryptedData(userId, encryptionId, text, encryptionK
     throw new Error('Text content is required');
   }
   
-  if (!encryptionKey || typeof encryptionKey !== 'string' || encryptionKey.length !== 64) {
+  if (!encryptionKey || typeof encryptionKey !== 'string') {
     throw new Error('64-character encryption key is required');
+  }
+  
+  if (encryptionKey.length !== 64) {
+    throw new Error('64-character encryption key is required');
+  }
+  
+  // Check if encryption key contains only valid characters (alphanumeric)
+  if (!/^[a-zA-Z0-9]+$/.test(encryptionKey)) {
+    throw new Error('Encryption key must contain only alphanumeric characters');
   }
   
   if (text.length > 1000000) { // 1MB limit
@@ -32,8 +53,7 @@ export async function storeEncryptedData(userId, encryptionId, text, encryptionK
   // Mock encryption - in real implementation this would encrypt the text
   const encryptedText = `encrypted_${text}`;
   
-  const dataId = `67${dataIdCounter.toString().padStart(22, '0')}`; // Mock ObjectId format
-  dataIdCounter++;
+  const dataId = generateTestObjectId();
   
   const dataEntry = {
     data_id: dataId,
@@ -45,7 +65,7 @@ export async function storeEncryptedData(userId, encryptionId, text, encryptionK
     updated_at: new Date().toISOString()
   };
   
-  mockData.set(dataEntry.data_id, dataEntry);
+  mockData.set(dataEntry.data_id.toString(), dataEntry);
   
   return {
     message: 'Data stored successfully',
@@ -119,7 +139,24 @@ export async function getDecryptedData(userId, encryptionId, encryptionKey, req,
  * Update encrypted data - matches real service interface
  */
 export async function updateEncryptedData(userId, dataId, text, encryptionKey, req) {
-  const dataEntry = mockData.get(dataId);
+  // Input validation
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+  
+  if (!dataId) {
+    throw new Error('Data ID is required');
+  }
+  
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    throw new Error('Text content is required');
+  }
+  
+  if (!encryptionKey || typeof encryptionKey !== 'string' || encryptionKey.length !== 64) {
+    throw new Error('64-character encryption key is required');
+  }
+  
+  const dataEntry = mockData.get(dataId.toString());
   
   if (!dataEntry) {
     throw new Error('Data not found');
@@ -148,7 +185,16 @@ export async function updateEncryptedData(userId, dataId, text, encryptionKey, r
  * Delete encrypted data - matches real service interface  
  */
 export async function deleteEncryptedData(userId, dataId) {
-  const dataEntry = mockData.get(dataId);
+  // Input validation
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+  
+  if (!dataId) {
+    throw new Error('Data ID is required');
+  }
+  
+  const dataEntry = mockData.get(dataId.toString());
   
   if (!dataEntry) {
     throw new Error('Data not found');
@@ -158,7 +204,7 @@ export async function deleteEncryptedData(userId, dataId) {
     throw new Error('Access denied');
   }
   
-  mockData.delete(dataId);
+  mockData.delete(dataId.toString());
   
   return {
     message: 'Data deleted successfully',
@@ -171,7 +217,6 @@ export async function deleteEncryptedData(userId, dataId) {
  */
 export function clearMockData() {
   mockData.clear();
-  dataIdCounter = 1;
 }
 
 /**
