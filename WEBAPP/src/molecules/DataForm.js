@@ -239,10 +239,10 @@ const DataForm = ({ encryptions, onSubmit, loading, encryptionsLoading }) => {
         message="Security Reminders"
         description={
           <ul className="mt-2 text-sm">
-            <li>• Your encryption key is needed to access this data later</li>
-            <li>• Data is encrypted client-side before being sent to the server</li>
-            <li>• Without the correct encryption key, the data cannot be decrypted</li>
-            <li>• Keep your encryption key safe and private</li>
+            <li>Your encryption key is needed to access this data later</li>
+            <li>Data is encrypted client-side before being sent to the server</li>
+            <li>Without the correct encryption key, the data cannot be decrypted</li>
+            <li>Keep your encryption key safe and private</li>
           </ul>
         }
         type="warning"

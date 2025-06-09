@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { AuthProvider } from '../hooks/useAuth';
 
 // Create a custom render function that includes providers
@@ -9,9 +9,15 @@ export const renderWithProviders = (ui, options = {}) => {
 
   const Wrapper = ({ children }) => (
     <AuthProvider>
-      <BrowserRouter>
+      <MemoryRouter 
+        initialEntries={initialEntries}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
         {children}
-      </BrowserRouter>
+      </MemoryRouter>
     </AuthProvider>
   );
 

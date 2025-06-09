@@ -12,7 +12,24 @@ jest.mock('./services/firebase', () => ({
     onAuthStateChanged: jest.fn(),
     currentUser: null
   },
-  googleProvider: {}
+  googleProvider: {},
+  trackEvent: jest.fn(),
+}));
+
+// Mock SEO helpers
+jest.mock('./utils/seoHelpers', () => ({
+  trackEngagement: jest.fn(),
+}));
+
+// Mock analytics
+jest.mock('./services/analytics', () => ({
+  trackErrors: {
+    apiError: jest.fn(),
+    networkError: jest.fn(),
+  },
+  trackPerformance: {
+    apiResponseTime: jest.fn(),
+  },
 }));
 
 // Mock localStorage
@@ -53,20 +70,41 @@ global.IntersectionObserver = class IntersectionObserver {
   }
 };
 
-// Suppress React Router warnings in tests
+// Suppress console warnings in tests
 const originalError = console.error;
+const originalWarn = console.warn;
+
 beforeAll(() => {
   console.error = (...args) => {
     if (
-      typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render is no longer supported')
+      typeof args[0] === 'string' && (
+        args[0].includes('Warning: ReactDOM.render is no longer supported') ||
+        args[0].includes('Warning: `ReactDOMTestUtils.act` is deprecated') ||
+        args[0].includes('Warning: ReactDOMTestUtils.act') ||
+        args[0].includes('ReactDOMTestUtils.act')
+      )
     ) {
       return;
     }
     return originalError.call(console, ...args);
   };
+
+  console.warn = (...args) => {
+    if (
+      typeof args[0] === 'string' && (
+        args[0].includes('React Router Future Flag Warning') ||
+        args[0].includes('React Router will begin wrapping') ||
+        args[0].includes('v7_startTransition') ||
+        args[0].includes('v7_relativeSplatPath')
+      )
+    ) {
+      return;
+    }
+    return originalWarn.call(console, ...args);
+  };
 });
 
 afterAll(() => {
   console.error = originalError;
+  console.warn = originalWarn;
 }); 

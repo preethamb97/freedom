@@ -2,29 +2,67 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ViewPage from '../../pages/ViewPage';
-import { renderWithProviders, resetMocks, mockUser } from '../../utils/test-utils';
-import { useAuth } from '../../hooks/useAuth';
+import { MemoryRouter } from 'react-router-dom';
+import { notification } from 'antd';
 import { encryptionAPI, dataAPI } from '../../services/api';
 
 // Mock the useAuth hook
-jest.mock('../../hooks/useAuth');
+const mockSignOut = jest.fn();
+const mockUseAuth = jest.fn();
 
-// Mock the API services
-jest.mock('../../services/api');
+// Mock react-router-dom navigation
+const mockNavigate = jest.fn();
+
+// Set up all mocks before any imports
+jest.mock('../../hooks/useAuth', () => ({
+  useAuth: () => mockUseAuth(),
+  AuthProvider: ({ children }) => <div data-testid="auth-provider">{children}</div>
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
+jest.mock('../../services/api', () => ({
+  encryptionAPI: {
+    getAll: jest.fn()
+  },
+  dataAPI: {
+    retrieve: jest.fn()
+  },
+}));
+
+jest.mock('antd', () => ({
+  ...jest.requireActual('antd'),
+  notification: {
+    error: jest.fn()
+  },
+}));
+
+jest.mock('../../hooks/useInfiniteScroll', () => ({
+  useInfiniteScroll: jest.fn(),
+}));
 
 // Mock the organisms components
 jest.mock('../../organisms/Header', () => {
-  return function MockHeader({ title }) {
-    return <div data-testid="header">{title}</div>;
+  return function MockHeader({ title, showMobileMenu, onMenuClick }) {
+    return (
+      <div data-testid="header">
+        <h1>{title}</h1>
+        <button onClick={onMenuClick} data-testid="menu-button">Menu</button>
+      </div>
+    );
   };
 });
 
 jest.mock('../../organisms/Sidebar', () => {
-  return function MockSidebar({ user, onSignOut }) {
+  return function MockSidebar({ user, onSignOut, isMobile, isOpen, onClose }) {
     return (
-      <div data-testid="sidebar">
-        <div>User: {user?.name}</div>
-        <button onClick={onSignOut}>Sign Out</button>
+      <div data-testid="sidebar" className={isOpen ? 'open' : 'closed'}>
+        <div data-testid="user-info">User: {user?.name || 'No user'}</div>
+        <button onClick={onSignOut} data-testid="sign-out-button">Sign Out</button>
+        {isMobile && <button onClick={onClose} data-testid="close-sidebar">Close</button>}
       </div>
     );
   };
@@ -34,40 +72,43 @@ jest.mock('../../molecules/DataViewer', () => {
   return function MockDataViewer({ encryptions, data, onFetchData, loading, encryptionsLoading, hasMore }) {
     return (
       <div data-testid="data-viewer">
-        <div>Encryptions Loading: {encryptionsLoading.toString()}</div>
-        <div>Data Loading: {loading.toString()}</div>
-        <div>Has More: {hasMore.toString()}</div>
-        <div>Encryptions Count: {encryptions.length}</div>
-        <div>Data Count: {data.length}</div>
-        <button onClick={() => onFetchData('test-encryption', 'test-key', true)}>
+        <div data-testid="encryptions-loading">Encryptions Loading: {encryptionsLoading.toString()}</div>
+        <div data-testid="encryptions-count">Encryptions Count: {encryptions.length}</div>
+        <div data-testid="data-loading">Data Loading: {loading.toString()}</div>
+        <button 
+          data-testid="fetch-data-button" 
+          onClick={() => onFetchData('test-encryption', 'test-key', 0, 10)}
+        >
           Fetch Data
         </button>
+        {data.length > 0 && (
+          <div data-testid="data-results">
+            {data.map(item => (
+              <div key={item.data_id}>{item.text}</div>
+            ))}
+          </div>
+        )}
       </div>
     );
   };
 });
 
-// Mock react-router-dom
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
+// Custom render function with router
+const renderWithRouter = (ui) => {
+  return render(
+    <MemoryRouter>
+      {ui}
+    </MemoryRouter>
+  );
+};
 
-// Mock useInfiniteScroll
-jest.mock('../../hooks/useInfiniteScroll', () => ({
-  useInfiniteScroll: jest.fn(),
-}));
+describe('ViewPage Tests', () => {
+  const mockUser = {
+    uid: 'test-user-123',
+    name: 'Test User',
+    email: 'test@example.com',
+  };
 
-// Mock antd notification
-jest.mock('antd', () => ({
-  ...jest.requireActual('antd'),
-  notification: {
-    error: jest.fn(),
-  },
-}));
-
-describe('ViewPage Integration Tests', () => {
   const mockEncryptions = [
     { encryption_id: 1, name: 'Test Encryption 1' },
     { encryption_id: 2, name: 'Test Encryption 2' },
@@ -79,14 +120,12 @@ describe('ViewPage Integration Tests', () => {
   ];
 
   beforeEach(() => {
-    resetMocks();
     jest.clearAllMocks();
-    mockNavigate.mockClear();
     
-    // Setup default auth state
-    useAuth.mockReturnValue({
+    // Default mock implementation
+    mockUseAuth.mockReturnValue({
       user: mockUser,
-      signOut: jest.fn()
+      signOut: mockSignOut
     });
 
     // Setup default API responses
@@ -94,14 +133,14 @@ describe('ViewPage Integration Tests', () => {
       data: { encryptions: mockEncryptions }
     });
 
-    dataAPI.get.mockResolvedValue({
+    dataAPI.retrieve.mockResolvedValue({
       data: { data: mockData }
     });
   });
 
-  describe('Initial Render and State', () => {
+  describe('Component Rendering', () => {
     test('should render main layout components', async () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       // Check for header
       expect(screen.getByTestId('header')).toBeInTheDocument();
@@ -109,70 +148,71 @@ describe('ViewPage Integration Tests', () => {
       
       // Check for sidebar with user info
       expect(screen.getByTestId('sidebar')).toBeInTheDocument();
-      expect(screen.getByText(`User: ${mockUser.name}`)).toBeInTheDocument();
+      expect(screen.getByTestId('user-info')).toHaveTextContent(`User: ${mockUser.name}`);
       
       // Check for data viewer
       expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
       
       // Check for page title and description
-      expect(screen.getByText(/Decrypt and View Data/i)).toBeInTheDocument();
-      expect(screen.getByText(/Select an encryption and enter your 64-digit encryption key/i)).toBeInTheDocument();
+      expect(screen.getByText('Decrypt and View Data')).toBeInTheDocument();
+      expect(screen.getByText(/Select an encryption and enter your 64-digit encryption key/)).toBeInTheDocument();
     });
 
     test('should render Back to Home button', () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       const backButton = screen.getByRole('button', { name: /Back to Home/i });
       expect(backButton).toBeInTheDocument();
     });
 
     test('should fetch encryptions on mount', async () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
         expect(encryptionAPI.getAll).toHaveBeenCalledTimes(1);
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Encryptions Count: 2')).toBeInTheDocument();
+        expect(screen.getByTestId('encryptions-count')).toHaveTextContent('Encryptions Count: 2');
       });
     });
   });
 
   describe('Navigation', () => {
     test('should navigate to home page when Back to Home button is clicked', async () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       const backButton = screen.getByRole('button', { name: /Back to Home/i });
-      userEvent.click(backButton);
+      await userEvent.click(backButton);
       
-      await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith('/home');
-      });
+      expect(mockNavigate).toHaveBeenCalledWith('/home');
     });
   });
 
   describe('Data Fetching', () => {
     test('should handle data fetching through DataViewer', async () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
         expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
       });
 
-      const fetchButton = screen.getByRole('button', { name: /Fetch Data/i });
-      userEvent.click(fetchButton);
+      const fetchButton = screen.getByTestId('fetch-data-button');
+      await userEvent.click(fetchButton);
       
       await waitFor(() => {
-        expect(dataAPI.get).toHaveBeenCalledWith('test-encryption', 'test-key');
+        expect(dataAPI.retrieve).toHaveBeenCalledWith('test-encryption', {
+          passphrase: 'test-key',
+          offset: 0,
+          limit: 10
+        });
       });
     });
 
     test('should handle encryption fetch errors', async () => {
-      const { notification } = require('antd');
       encryptionAPI.getAll.mockRejectedValue(new Error('Network error'));
 
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
         expect(notification.error).toHaveBeenCalledWith({
@@ -183,21 +223,20 @@ describe('ViewPage Integration Tests', () => {
     });
 
     test('should handle data fetch errors', async () => {
-      const { notification } = require('antd');
-      dataAPI.get.mockRejectedValue({
+      dataAPI.retrieve.mockRejectedValue({
         response: {
           data: { message: 'Invalid encryption key' }
         }
       });
 
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
         expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
       });
 
-      const fetchButton = screen.getByRole('button', { name: /Fetch Data/i });
-      userEvent.click(fetchButton);
+      const fetchButton = screen.getByTestId('fetch-data-button');
+      await userEvent.click(fetchButton);
       
       await waitFor(() => {
         expect(notification.error).toHaveBeenCalledWith({
@@ -210,70 +249,89 @@ describe('ViewPage Integration Tests', () => {
 
   describe('Loading States', () => {
     test('should show encryptions loading state', async () => {
-      // Make the API call hang to test loading state
-      encryptionAPI.getAll.mockImplementation(() => new Promise(() => {}));
-
-      renderWithProviders(<ViewPage />);
+      encryptionAPI.getAll.mockImplementation(() => new Promise(() => {})); // Never resolves
+      
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
-        expect(screen.getByText('Encryptions Loading: true')).toBeInTheDocument();
+        expect(screen.getByTestId('encryptions-loading')).toHaveTextContent('Encryptions Loading: true');
       });
     });
 
     test('should show data loading state', async () => {
-      dataAPI.get.mockImplementation(() => new Promise(() => {}));
-
-      renderWithProviders(<ViewPage />);
+      dataAPI.retrieve.mockImplementation(() => new Promise(() => {})); // Never resolves
+      
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
         expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
       });
 
-      const fetchButton = screen.getByRole('button', { name: /Fetch Data/i });
-      userEvent.click(fetchButton);
+      const fetchButton = screen.getByTestId('fetch-data-button');
+      await userEvent.click(fetchButton);
       
       await waitFor(() => {
-        expect(screen.getByText('Data Loading: true')).toBeInTheDocument();
+        expect(screen.getByTestId('data-loading')).toHaveTextContent('Data Loading: true');
       });
     });
   });
 
   describe('User Authentication', () => {
     test('should display user information in sidebar', () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
-      expect(screen.getByText(`User: ${mockUser.name}`)).toBeInTheDocument();
+      expect(screen.getByTestId('user-info')).toHaveTextContent(`User: ${mockUser.name}`);
     });
 
     test('should handle sign out from sidebar', async () => {
-      const mockSignOut = jest.fn();
+      renderWithRouter(<ViewPage />);
       
-      useAuth.mockReturnValue({
-        user: mockUser,
+      const signOutButton = screen.getByTestId('sign-out-button');
+      await userEvent.click(signOutButton);
+      
+      expect(mockSignOut).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Error Handling', () => {
+    test('should handle missing user gracefully', () => {
+      mockUseAuth.mockReturnValue({
+        user: null,
         signOut: mockSignOut
       });
 
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
-      const signOutButton = screen.getByRole('button', { name: /Sign Out/i });
-      userEvent.click(signOutButton);
+      // Component should still render
+      expect(screen.getByTestId('header')).toBeInTheDocument();
+      expect(screen.getByTestId('sidebar')).toBeInTheDocument();
+      expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
+      expect(screen.getByTestId('user-info')).toHaveTextContent('User: No user');
+    });
+
+    test('should handle empty encryptions response', async () => {
+      encryptionAPI.getAll.mockResolvedValue({
+        data: { encryptions: [] }
+      });
+
+      renderWithRouter(<ViewPage />);
       
       await waitFor(() => {
-        expect(mockSignOut).toHaveBeenCalledTimes(1);
+        expect(screen.getByTestId('encryptions-count')).toHaveTextContent('Encryptions Count: 0');
       });
     });
   });
 
   describe('Layout Structure', () => {
     test('should have proper layout structure', () => {
-      const { container } = renderWithProviders(<ViewPage />);
+      const { container } = renderWithRouter(<ViewPage />);
       
       // Check for main layout
       expect(container.querySelector('.min-h-screen')).toBeInTheDocument();
     });
 
     test('should render all required components', () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       // All main components should be present
       expect(screen.getByTestId('header')).toBeInTheDocument();
@@ -284,7 +342,7 @@ describe('ViewPage Integration Tests', () => {
 
   describe('Responsive Design', () => {
     test('should handle different screen sizes', () => {
-      const { container } = renderWithProviders(<ViewPage />);
+      const { container } = renderWithRouter(<ViewPage />);
       
       // Check if responsive classes are applied
       expect(container.querySelector('.max-w-4xl')).toBeInTheDocument();
@@ -293,7 +351,7 @@ describe('ViewPage Integration Tests', () => {
 
   describe('Accessibility', () => {
     test('should have proper heading hierarchy', () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       // Check for main heading
       const mainHeading = screen.getByRole('heading', { level: 2 });
@@ -302,50 +360,10 @@ describe('ViewPage Integration Tests', () => {
     });
 
     test('should have accessible buttons', () => {
-      renderWithProviders(<ViewPage />);
+      renderWithRouter(<ViewPage />);
       
       const backButton = screen.getByRole('button', { name: /Back to Home/i });
       expect(backButton).toBeInTheDocument();
-    });
-  });
-
-  describe('Error Handling', () => {
-    test('should handle missing user gracefully', () => {
-      useAuth.mockReturnValue({
-        user: null,
-        signOut: jest.fn()
-      });
-
-      renderWithProviders(<ViewPage />);
-      
-      // Component should still render
-      expect(screen.getByTestId('header')).toBeInTheDocument();
-      expect(screen.getByTestId('sidebar')).toBeInTheDocument();
-      expect(screen.getByTestId('data-viewer')).toBeInTheDocument();
-    });
-
-    test('should handle empty encryptions response', async () => {
-      encryptionAPI.getAll.mockResolvedValue({
-        data: { encryptions: [] }
-      });
-
-      renderWithProviders(<ViewPage />);
-      
-      await waitFor(() => {
-        expect(screen.getByText('Encryptions Count: 0')).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Performance', () => {
-    test('should not have unnecessary re-renders', () => {
-      const { rerender } = renderWithProviders(<ViewPage />);
-      
-      // Re-render with same props
-      rerender(<ViewPage />);
-      
-      // Component should still be functional
-      expect(screen.getByRole('button', { name: /Back to Home/i })).toBeInTheDocument();
     });
   });
 }); 

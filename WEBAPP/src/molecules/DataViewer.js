@@ -267,10 +267,10 @@ const DataViewer = ({ encryptions, data, loading, onFetchData, onLoadMore, hasMo
         message="Security Information"
         description={
           <ul className="mt-2 text-sm">
-            <li>• Data is decrypted client-side for viewing</li>
-            <li>• Your encryption key never leaves your browser</li>
-            <li>• Incorrect keys will result in failed decryption</li>
-            <li>• Refresh the page to clear decrypted data from memory</li>
+            <li>Data is decrypted client-side for viewing</li>
+            <li>Your encryption key never leaves your browser</li>
+            <li>Incorrect keys will result in failed decryption</li>
+            <li>Refresh the page to clear decrypted data from memory</li>
           </ul>
         }
         type="warning"

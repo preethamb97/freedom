@@ -106,31 +106,31 @@ const LandingPage = () => {
                     className="leading-relaxed"
                     onMouseEnter={() => handleFeatureInteraction('aes_256_encryption')}
                   >
-                    • <strong>AES-256-GCM encryption</strong> - Military-grade security
+                    <strong>AES-256-GCM encryption</strong> - Military-grade security
                   </li>
                   <li 
                     className="leading-relaxed"
                     onMouseEnter={() => handleFeatureInteraction('64_char_keys')}
                   >
-                    • <strong>64-character alphanumeric keys</strong> - Maximum protection
+                    <strong>64-character alphanumeric keys</strong> - Maximum protection
                   </li>
                   <li 
                     className="leading-relaxed"
                     onMouseEnter={() => handleFeatureInteraction('zero_knowledge')}
                   >
-                    • <strong>Zero-knowledge architecture</strong> - Complete privacy
+                    <strong>Zero-knowledge architecture</strong> - Complete privacy
                   </li>
                   <li 
                     className="leading-relaxed"
                     onMouseEnter={() => handleFeatureInteraction('rate_limiting')}
                   >
-                    • <strong>Rate limiting protection</strong> - Brute-force prevention
+                    <strong>Rate limiting protection</strong> - Brute-force prevention
                   </li>
                   <li 
                     className="leading-relaxed"
                     onMouseEnter={() => handleFeatureInteraction('end_to_end_encryption')}
                   >
-                    • <strong>End-to-end encryption</strong> - Data never exposed
+                    <strong>End-to-end encryption</strong> - Data never exposed
                   </li>
                 </ul>
               </div>
